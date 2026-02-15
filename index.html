@@ -37,18 +37,18 @@
           </p>
         </div>
         <div class="container booking-panel">
-          <form class="booking-grid">
+          <form id="booking-form" class="booking-grid">
             <label>
               Check In
-              <input type="date" />
+              <input type="date" name="checkIn" required />
             </label>
             <label>
               Check Out
-              <input type="date" />
+              <input type="date" name="checkOut" required />
             </label>
             <label>
               Guests
-              <select>
+              <select name="guests" required>
                 <option>2 Adults</option>
                 <option>1 Adult</option>
                 <option>Family</option>
@@ -56,14 +56,16 @@
             </label>
             <label>
               Rooms
-              <select>
+              <select name="rooms" required>
                 <option>1 Room</option>
                 <option>2 Rooms</option>
                 <option>3 Rooms</option>
+                <option selected>4 Rooms</option>
               </select>
             </label>
-            <button type="button">Search Availability</button>
+            <button type="submit">Search Availability</button>
           </form>
+          <p id="availability-status" class="availability-status" aria-live="polite"></p>
         </div>
       </section>
 
@@ -142,5 +144,32 @@
         <p>hello@hamiltonvista.com | +1 (212) 555-0197</p>
       </div>
     </footer>
+
+    <div id="guest-modal" class="modal-backdrop" aria-hidden="true">
+      <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="guest-modal-title">
+        <h3 id="guest-modal-title">Complete Your Booking</h3>
+        <p class="modal-copy">Availability is confirmed. Add your guest details to continue.</p>
+        <form id="guest-details-form" class="guest-form">
+          <label>
+            Guest Name
+            <input type="text" name="guestName" placeholder="Enter full name" required />
+          </label>
+          <label>
+            Rooms Required
+            <input type="number" name="roomsRequired" min="1" max="4" value="4" required />
+          </label>
+          <label>
+            Contact Number
+            <input type="tel" name="contactNumber" placeholder="+1 555 123 4567" required />
+          </label>
+          <div class="modal-actions">
+            <button type="button" id="cancel-guest-form" class="ghost-btn">Cancel</button>
+            <button type="submit">Confirm Booking</button>
+          </div>
+        </form>
+      </div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="script.js"></script>
   </body>
 </html>

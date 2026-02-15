@@ -179,6 +179,14 @@ h1 {
   cursor: pointer;
 }
 
+.availability-status {
+  margin-top: 0.85rem;
+  font-size: 0.92rem;
+  font-weight: 700;
+  color: #f7dfb8;
+  min-height: 1.25rem;
+}
+
 .section {
   padding: 4.8rem 0;
 }
@@ -301,6 +309,84 @@ h1 {
   padding: 1.3rem 0;
   color: #28465c;
   font-weight: 600;
+}
+
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  background: rgba(8, 20, 28, 0.64);
+  z-index: 120;
+  padding: 1rem;
+}
+
+.modal-backdrop.is-open {
+  display: flex;
+}
+
+.modal-card {
+  width: min(520px, 100%);
+  background: #fff;
+  border-radius: 14px;
+  border: 1px solid var(--line);
+  box-shadow: var(--shadow);
+  padding: 1.3rem;
+}
+
+.modal-card h3 {
+  font-size: clamp(1.45rem, 2vw, 1.9rem);
+}
+
+.modal-copy {
+  margin-top: 0.45rem;
+  color: var(--ink-soft);
+}
+
+.guest-form {
+  margin-top: 1rem;
+  display: grid;
+  gap: 0.8rem;
+}
+
+.guest-form label {
+  display: grid;
+  gap: 0.35rem;
+  font-weight: 700;
+  font-size: 0.86rem;
+}
+
+.guest-form input {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  font: inherit;
+  color: var(--ink-soft);
+  padding: 0.7rem;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.6rem;
+  margin-top: 0.5rem;
+}
+
+.modal-actions button {
+  border: 0;
+  border-radius: 8px;
+  font: inherit;
+  font-weight: 700;
+  color: #fff;
+  background: linear-gradient(140deg, var(--ink), #203f54);
+  padding: 0.68rem 1rem;
+  cursor: pointer;
+}
+
+.modal-actions .ghost-btn {
+  background: #fff;
+  color: var(--ink-soft);
+  border: 1px solid var(--line);
 }
 
 @media (max-width: 980px) {
