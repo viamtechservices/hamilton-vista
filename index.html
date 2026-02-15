@@ -1,0 +1,146 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Hamilton Vista | Hotel Booking</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="container nav-wrap">
+        <a class="brand" href="#">Hamilton Vista</a>
+        <nav class="main-nav">
+          <a href="#rooms">Rooms</a>
+          <a href="#experience">Experience</a>
+          <a href="#offers">Offers</a>
+          <a href="#contact">Contact</a>
+        </nav>
+        <button class="cta-btn">Book Now</button>
+      </div>
+    </header>
+
+    <main>
+      <section class="hero">
+        <div class="hero-overlay"></div>
+        <div class="container hero-content">
+          <p class="eyebrow">Luxury Stay in the Heart of the City</p>
+          <h1>Find Your Perfect Hotel Escape</h1>
+          <p class="hero-copy">
+            Experience comfort, elegance, and seamless booking in one place.
+          </p>
+        </div>
+        <div class="container booking-panel">
+          <form class="booking-grid">
+            <label>
+              Check In
+              <input type="date" />
+            </label>
+            <label>
+              Check Out
+              <input type="date" />
+            </label>
+            <label>
+              Guests
+              <select>
+                <option>2 Adults</option>
+                <option>1 Adult</option>
+                <option>Family</option>
+              </select>
+            </label>
+            <label>
+              Rooms
+              <select>
+                <option>1 Room</option>
+                <option>2 Rooms</option>
+                <option>3 Rooms</option>
+              </select>
+            </label>
+            <button type="button">Search Availability</button>
+          </form>
+        </div>
+      </section>
+
+      <section id="rooms" class="section">
+        <div class="container">
+          <div class="section-head">
+            <p class="eyebrow">Popular Rooms</p>
+            <h2>Stay Designed Around You</h2>
+          </div>
+          <div class="cards">
+            <article class="card">
+              <div class="card-image image-one"></div>
+              <div class="card-body">
+                <h3>Deluxe King Suite</h3>
+                <p>Spacious room with skyline view, lounge seating, and minibar.</p>
+                <span>From $189/night</span>
+              </div>
+            </article>
+            <article class="card">
+              <div class="card-image image-two"></div>
+              <div class="card-body">
+                <h3>Ocean Premium Room</h3>
+                <p>Modern interior, private balcony, and curated welcome package.</p>
+                <span>From $229/night</span>
+              </div>
+            </article>
+            <article class="card">
+              <div class="card-image image-three"></div>
+              <div class="card-body">
+                <h3>Executive Residence</h3>
+                <p>Luxury two-room layout with work area and signature bathroom.</p>
+                <span>From $299/night</span>
+              </div>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section id="experience" class="section section-soft">
+        <div class="container features">
+          <div>
+            <p class="eyebrow">Why Guests Choose Us</p>
+            <h2>Memorable Hospitality, Every Time</h2>
+            <p>
+              Hamilton Vista combines elevated interiors, personalized service,
+              and smart booking to make every stay effortless.
+            </p>
+          </div>
+          <ul>
+            <li>24/7 concierge and in-room dining</li>
+            <li>Infinity pool, fitness center, and spa</li>
+            <li>Airport transfers and guided city tours</li>
+            <li>Fast Wi-Fi and business meeting suites</li>
+          </ul>
+        </div>
+      </section>
+
+      <section id="offers" class="section">
+        <div class="container promo">
+          <div>
+            <p class="eyebrow">Limited Offer</p>
+            <h2>Save 20% on Weekend Bookings</h2>
+            <p>
+              Book before the end of this month and enjoy complimentary breakfast
+              and late check-out.
+            </p>
+          </div>
+          <button class="cta-btn">Claim Offer</button>
+        </div>
+      </section>
+    </main>
+
+    <footer id="contact" class="site-footer">
+      <div class="container footer-wrap">
+        <p>Hamilton Vista</p>
+        <p>hello@hamiltonvista.com | +1 (212) 555-0197</p>
+      </div>
+    </footer>
+  </body>
+</html>
