@@ -81,24 +81,25 @@ body {
   overflow: hidden;
 }
 
-.hero::before {
-  content: "";
+.hero-video {
   position: absolute;
   inset: 0;
-  background: linear-gradient(
-      rgba(18, 34, 47, 0.28),
-      rgba(18, 34, 47, 0.48)
-    ),
-    url("https://images.unsplash.com/photo-1578683010236-d716f9a3f461?auto=format&fit=crop&w=1600&q=80")
-      center/cover no-repeat;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
   transform: scale(1.04);
 }
 
 .hero-overlay {
   position: absolute;
-  inset: auto 0 0;
-  height: 35%;
-  background: linear-gradient(180deg, transparent, rgba(18, 34, 47, 0.6));
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    rgba(0, 0, 0, 0.5) 0%,
+    rgba(0, 0, 0, 0.45) 45%,
+    rgba(0, 0, 0, 0.65) 100%
+  );
+  z-index: 1;
 }
 
 .hero-content {
