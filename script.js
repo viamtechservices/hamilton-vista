@@ -165,4 +165,27 @@ $(function () {
       closeGuestModal();
     }
   });
+
+  $(".masonry-item").on("click", function () {
+    var imageSrc = $(this).attr("data-image");
+    $("#gallery-modal-image").attr("src", imageSrc);
+    $("#gallery-modal").addClass("is-open").attr("aria-hidden", "false");
+  });
+
+  $("#gallery-close").on("click", function () {
+    $("#gallery-modal").removeClass("is-open").attr("aria-hidden", "true");
+    $("#gallery-modal-image").attr("src", "");
+  });
+
+  $("#gallery-modal").on("click", function (event) {
+    if (event.target === this) {
+      $("#gallery-close").trigger("click");
+    }
+  });
+
+  $(document).on("keydown", function (event) {
+    if (event.key === "Escape") {
+      $("#gallery-close").trigger("click");
+    }
+  });
 });
