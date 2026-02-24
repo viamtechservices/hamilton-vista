@@ -3,11 +3,15 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Hamilton Vista | Hotel Booking</title>
+    <title>Hamilton Vista | Homestay Booking</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
       href="https://fonts.googleapis.com/css2?family=Jost:ital,wght@0,100..900;1,100..900&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&display=swap"
       rel="stylesheet"
     />
     <link
@@ -26,7 +30,7 @@
           <a href="#location">Location</a>
           <a href="#contact">Contact</a>
         </nav>
-        <button class="cta-btn">Book Now</button>
+        <a class="cta-btn" href="login.html">Login</a>
       </div>
     </header>
 
@@ -36,13 +40,6 @@
           <source src="videos/DJI_0062.MP4" type="video/mp4" />
         </video>
         <div class="hero-overlay"></div>
-        <div class="container hero-content">
-          <p class="eyebrow">Luxury Stay in the Heart of the City</p>
-          <h1>Find Your Perfect Hotel Escape</h1>
-          <p class="hero-copy">
-            Experience comfort, elegance, and seamless booking in one place.
-          </p>
-        </div>
         <div class="container booking-panel">
           <form id="booking-form" class="booking-grid">
             <label>
@@ -73,6 +70,48 @@
             <button type="submit">Search Availability</button>
           </form>
           <p id="availability-status" class="availability-status" aria-live="polite"></p>
+        </div>
+      </section>
+
+      <section class="room-showcase section">
+        <div class="container">
+          <div class="room-showcase-grid">
+            <article class="room-showcase-card">
+              <img src="images/IMG_0801.jpeg" alt="Hamilton Vista premium room" loading="lazy" />
+              <div class="room-showcase-body">
+                <div class="room-showcase-meta">
+                  <span><i class="fa-regular fa-user"></i> Capacity: 2 Persons</span>
+                  <span><i class="fa-solid fa-bed"></i> Extra bedding allowed</span>
+                </div>
+                <h3>Deluxe Homestay Room</h3>
+                <a class="room-showcase-link" href="#rooms">View Room</a>
+              </div>
+            </article>
+
+            <article class="room-showcase-card">
+              <img src="images/IMG_0810.jpeg" alt="Hamilton Vista luxury room" loading="lazy" />
+              <div class="room-showcase-body">
+                <div class="room-showcase-meta">
+                  <span><i class="fa-regular fa-user"></i> Capacity: 2 Persons</span>
+                  <span><i class="fa-solid fa-bed"></i> Extra bedding allowed</span>
+                </div>
+                <h3>Queen Luxury Room</h3>
+                <a class="room-showcase-link" href="#rooms">View Room</a>
+              </div>
+            </article>
+
+            <article class="room-showcase-card">
+              <img src="images/IMG_0816.jpeg" alt="Hamilton Vista comfort room" loading="lazy" />
+              <div class="room-showcase-body">
+                <div class="room-showcase-meta">
+                  <span><i class="fa-regular fa-user"></i> Capacity: 2 Persons</span>
+                  <span><i class="fa-solid fa-bed"></i> Extra bedding allowed</span>
+                </div>
+                <h3>Comfort Family Room</h3>
+                <a class="room-showcase-link" href="#rooms">View Room</a>
+              </div>
+            </article>
+          </div>
         </div>
       </section>
 
@@ -181,7 +220,7 @@
     <footer id="contact" class="site-footer">
       <div class="container footer-wrap">
         <p>Hamilton Vista</p>
-        <p>hello@hamiltonvista.com | +1 (212) 555-0197</p>
+        <p>+91 98162 17173</p>
       </div>
     </footer>
 
@@ -200,7 +239,7 @@
           </label>
           <label>
             Contact Number
-            <input type="tel" name="contactNumber" placeholder="+1 555 123 4567" required />
+            <input type="tel" name="contactNumber" placeholder="+91 98162 17173" required />
           </label>
           <div
             id="turnstile-container"
