@@ -1,0 +1,404 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Hotel Bookings Dashboard</title>
+  <style>
+    :root {
+      --bg: #f4f7fa;
+      --panel: #ffffff;
+      --text: #162031;
+      --muted: #5f6f86;
+      --border: #d8e0ea;
+      --accent: #155eef;
+      --success: #067647;
+      --danger: #b42318;
+      --warning-bg: #fffaeb;
+      --warning-text: #7a4f01;
+      --shadow: 0 12px 28px rgba(15, 28, 60, 0.08);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      color: var(--text);
+      background: linear-gradient(160deg, #ebf4ff 0%, #f4f7fa 45%, #eef8f3 100%);
+      min-height: 100vh;
+      padding: 24px;
+    }
+
+    .container {
+      max-width: 1060px;
+      margin: 0 auto;
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      box-shadow: var(--shadow);
+      padding: 22px;
+    }
+
+    .top {
+      display: flex;
+      gap: 12px;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      margin-bottom: 16px;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 1.5rem;
+    }
+
+    .muted {
+      color: var(--muted);
+      font-size: 0.9rem;
+      margin-top: 4px;
+    }
+
+    .actions { display: flex; gap: 8px; }
+
+    button {
+      border: 1px solid var(--border);
+      border-radius: 9px;
+      background: #fff;
+      color: var(--text);
+      font-weight: 600;
+      padding: 9px 12px;
+      cursor: pointer;
+    }
+
+    button.primary {
+      background: var(--accent);
+      color: #fff;
+      border-color: #0b4ad2;
+    }
+
+    button.confirm {
+      background: #ecfdf3;
+      color: var(--success);
+      border-color: #ace9c5;
+      font-size: 0.84rem;
+      padding: 7px 10px;
+    }
+
+    button.cancel {
+      background: #fef3f2;
+      color: var(--danger);
+      border-color: #fecdca;
+      font-size: 0.84rem;
+      padding: 7px 10px;
+    }
+
+    .row-actions {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .call-link {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid #bfd7ff;
+      background: #eff4ff;
+      color: #1849a9;
+      border-radius: 8px;
+      font-size: 0.84rem;
+      font-weight: 600;
+      text-decoration: none;
+      padding: 7px 10px;
+    }
+
+    button:disabled { opacity: 0.6; cursor: not-allowed; }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 12px;
+      min-width: 800px;
+    }
+
+    .table-wrap { overflow-x: auto; }
+
+    th, td {
+      border-bottom: 1px solid var(--border);
+      text-align: left;
+      padding: 12px 10px;
+      font-size: 0.92rem;
+      vertical-align: top;
+    }
+
+    th {
+      color: #243145;
+      font-size: 0.82rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      background: #f8fafc;
+    }
+
+    .badge {
+      display: inline-flex;
+      padding: 4px 8px;
+      border-radius: 999px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      text-transform: capitalize;
+    }
+
+    .badge.pending {
+      background: var(--warning-bg);
+      color: var(--warning-text);
+      border: 1px solid #fde68a;
+    }
+
+    .badge.confirmed {
+      background: #ecfdf3;
+      color: var(--success);
+      border: 1px solid #abefc6;
+    }
+
+    .msg {
+      margin-top: 12px;
+      padding: 10px 12px;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      display: none;
+    }
+
+    .msg.error {
+      display: block;
+      color: var(--danger);
+      background: #fef3f2;
+      border: 1px solid #fecdca;
+    }
+
+    .msg.info {
+      display: block;
+      color: #1849a9;
+      background: #eff8ff;
+      border: 1px solid #b2ddff;
+    }
+  </style>
+</head>
+<body>
+  <main class="container">
+    <div class="top">
+      <div>
+        <h1>Bookings Dashboard</h1>
+        <div id="user-email" class="muted">Checking session...</div>
+      </div>
+      <div class="actions">
+        <button id="refresh-btn">Refresh</button>
+        <button id="logout-btn">Logout</button>
+      </div>
+    </div>
+
+    <div id="message" class="msg"></div>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Guest</th>
+            <th>Guests</th>
+            <th>Rooms</th>
+            <th>Contact</th>
+            <th>Check In</th>
+            <th>Check Out</th>
+            <th>Status</th>
+            <th>Created</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody id="bookings-body">
+          <tr><td colspan="10">Loading bookings...</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script>
+    const SUPABASE_URL = "https://rlpcsrmgaeiwcmdkhhvi.supabase.co";
+    const OBFUSCATED_ANON_KEY =
+      "HV_NOISE_A9x7Qm_eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJscGNzcm1nYWVpd2NtZGtoaHZpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzExMzUxNTUsImV4cCI6MjA4NjcxMTE1NX0.KNQQpdKyBff3v_3vBKDAcU5LhYPA4zzgWqXpyFw-wgo_Zr1LpT9_NOISE";
+
+    const client = window.supabase.createClient(
+      SUPABASE_URL,
+      OBFUSCATED_ANON_KEY
+        .replace("HV_NOISE_A9x7Qm_", "")
+        .replace("_Zr1LpT9_NOISE", "")
+        .trim()
+    );
+    const tbody = document.getElementById("bookings-body");
+    const message = document.getElementById("message");
+    const userEmail = document.getElementById("user-email");
+    const refreshBtn = document.getElementById("refresh-btn");
+    const logoutBtn = document.getElementById("logout-btn");
+
+    function setMessage(text, type = "info") {
+      message.textContent = text;
+      message.className = `msg ${type}`;
+    }
+
+    function clearMessage() {
+      message.textContent = "";
+      message.className = "msg";
+    }
+
+    function fmtDate(value) {
+      if (!value) return "-";
+      const d = new Date(value);
+      if (Number.isNaN(d.getTime())) return value;
+      return d.toLocaleString();
+    }
+
+    function bookingRow(booking) {
+      const status = (booking.status || "pending").toLowerCase();
+      const canConfirm = status !== "confirmed";
+      const phone = String(booking.contact_number || "").trim();
+      const phoneHref = phone ? `tel:${phone.replace(/[^+\d]/g, "")}` : "";
+
+      return `
+        <tr>
+          <td>${booking.id ?? "-"}</td>
+          <td>${booking.guest_name ?? "-"}</td>
+          <td>${booking.guests_text ?? "-"}</td>
+          <td>${booking.rooms_requested ?? "-"}</td>
+          <td>${booking.contact_number ?? "-"}</td>
+          <td>${fmtDate(booking.check_in)}</td>
+          <td>${fmtDate(booking.check_out)}</td>
+          <td><span class="badge ${status === "confirmed" ? "confirmed" : "pending"}">${status}</span></td>
+          <td>${fmtDate(booking.created_at)}</td>
+          <td>
+            <div class="row-actions">
+              ${phoneHref ? `<a class="call-link" href="${phoneHref}">Call</a>` : ""}
+              ${canConfirm ? `<button class="confirm" data-booking-id="${booking.id}">Confirm</button>` : ""}
+              <button class="cancel" data-booking-id="${booking.id}" data-guest-name="${booking.guest_name || "Guest"}">Cancel</button>
+            </div>
+          </td>
+        </tr>
+      `;
+    }
+
+    async function loadBookings() {
+      clearMessage();
+      tbody.innerHTML = '<tr><td colspan="10">Loading bookings...</td></tr>';
+
+      const { data, error } = await client
+        .from("hamilton_vista_bookings")
+        .select("id, guest_name, guests_text, rooms_requested, contact_number, check_in, check_out, status, created_at")
+        .order("created_at", { ascending: false });
+
+      if (error) {
+        tbody.innerHTML = '<tr><td colspan="10">Could not load bookings.</td></tr>';
+        setMessage(error.message || "Failed to fetch bookings.", "error");
+        return;
+      }
+
+      if (!data || data.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="10">No bookings found.</td></tr>';
+        return;
+      }
+
+      tbody.innerHTML = data.map(bookingRow).join("");
+    }
+
+    async function confirmBooking(id, button) {
+      button.disabled = true;
+      button.textContent = "Saving...";
+
+      const { error } = await client
+        .from("hamilton_vista_bookings")
+        .update({ status: "confirmed" })
+        .eq("id", id);
+
+      if (error) {
+        setMessage(error.message || "Failed to confirm booking.", "error");
+        button.disabled = false;
+        button.textContent = "Confirm";
+        return;
+      }
+
+      await loadBookings();
+      setMessage(`Booking ${id} confirmed.`, "info");
+    }
+
+    async function cancelBooking(id, button) {
+      const guestName = button.getAttribute("data-guest-name") || "this guest";
+      const proceed = window.confirm(`Delete booking for ${guestName}? This cannot be undone.`);
+      if (!proceed) return;
+
+      button.disabled = true;
+      button.textContent = "Deleting...";
+
+      const { error } = await client
+        .from("hamilton_vista_bookings")
+        .delete()
+        .eq("id", id);
+
+      if (error) {
+        setMessage(error.message || "Failed to cancel booking.", "error");
+        button.disabled = false;
+        button.textContent = "Cancel";
+        return;
+      }
+
+      await loadBookings();
+      setMessage(`Booking ${id} cancelled and deleted.`, "info");
+    }
+
+    tbody.addEventListener("click", (event) => {
+      const confirmBtn = event.target.closest("button.confirm");
+      if (confirmBtn) {
+        const bookingId = confirmBtn.getAttribute("data-booking-id");
+        if (!bookingId) return;
+        confirmBooking(bookingId, confirmBtn);
+        return;
+      }
+
+      const cancelBtn = event.target.closest("button.cancel");
+      if (cancelBtn) {
+        const bookingId = cancelBtn.getAttribute("data-booking-id");
+        if (!bookingId) return;
+        cancelBooking(bookingId, cancelBtn);
+      }
+    });
+
+    refreshBtn.addEventListener("click", loadBookings);
+
+    logoutBtn.addEventListener("click", async () => {
+      await client.auth.signOut();
+      window.location.href = "login.html";
+    });
+
+    async function guardPage() {
+      const { data, error } = await client.auth.getSession();
+      const session = data?.session;
+
+      if (error || !session) {
+        window.location.href = "login.html";
+        return;
+      }
+
+      userEmail.textContent = `Logged in as ${session.user.email}`;
+      await loadBookings();
+    }
+
+    client.auth.onAuthStateChange((_event, session) => {
+      if (!session) {
+        window.location.href = "login.html";
+      }
+    });
+
+    guardPage();
+  </script>
+</body>
+</html>
