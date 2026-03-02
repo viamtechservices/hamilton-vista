@@ -1,6 +1,7 @@
 $(function () {
   var pendingSearchPayload = null;
   var ROOM_LIMIT = 4;
+  var VILLA_RATE = 9900;
   var supabaseUrl = window.SUPABASE_URL;
   var supabaseAnonKey = window.SUPABASE_ANON_KEY;
   var turnstileSiteKey = window.TURNSTILE_SITE_KEY;
@@ -21,7 +22,7 @@ $(function () {
   function setAvailabilityMessage(message, isError) {
     var $status = $("#availability-status");
     $status.text(message);
-    $status.css("color", isError ? "#ffb0a8" : "#f7dfb8");
+    $status.css("color", isError ? "#b83a2f" : "#2a3f50");
   }
 
   function setButtonLoading($button, loadingText, isLoading) {
@@ -81,6 +82,21 @@ $(function () {
     return "";
   }
 
+  function getRequestedRooms(selectionValue) {
+    var normalized = String(selectionValue || "").toLowerCase();
+    if (normalized.indexOf("villa") !== -1) {
+      return ROOM_LIMIT;
+    }
+    var parsed = parseInt(selectionValue, 10);
+    if (Number.isNaN(parsed) || parsed < 1) {
+      return 1;
+    }
+    if (parsed > ROOM_LIMIT) {
+      return ROOM_LIMIT;
+    }
+    return parsed;
+  }
+
   function closeGuestModal() {
     $("#guest-modal").removeClass("is-open").attr("aria-hidden", "true");
     $("#guest-details-form")[0].reset();
@@ -133,13 +149,11 @@ $(function () {
       return;
     }
 
-    var selectedRoomsText = $('select[name="rooms"]').val() || String(ROOM_LIMIT);
-    var selectedRooms = parseInt(selectedRoomsText, 10);
-    if (Number.isNaN(selectedRooms) || selectedRooms < 1) {
-      selectedRooms = 1;
-    }
-    if (selectedRooms > ROOM_LIMIT) {
-      selectedRooms = ROOM_LIMIT;
+    var selectedRoomsValue = $('select[name="rooms"]').val() || "4 Rooms";
+    var isVillaBooking = String(selectedRoomsValue).toLowerCase().indexOf("villa") !== -1;
+    var selectedRooms = getRequestedRooms(selectedRoomsValue);
+
+    if (!isVillaBooking && parseInt(selectedRoomsValue, 10) > ROOM_LIMIT) {
       setAvailabilityMessage("Room limit is 4. Search set to 4 rooms.", true);
     }
 
@@ -148,6 +162,7 @@ $(function () {
       checkOut: $('input[name="checkOut"]').val(),
       guests: $('select[name="guests"]').val(),
       rooms: String(selectedRooms),
+      isVillaBooking: isVillaBooking,
     };
 
     var dateValidationError = validateDateRange(pendingSearchPayload.checkIn, pendingSearchPayload.checkOut);
@@ -174,19 +189,32 @@ $(function () {
         console.log("Availability response:", response);
 
         if (response && response.available) {
-          setAvailabilityMessage("Available. Please complete guest details.", false);
+          if (pendingSearchPayload.isVillaBooking) {
+            setAvailabilityMessage("Family Villa is available at INR " + VILLA_RATE + "/night. Please complete guest details.", false);
+          } else {
+            setAvailabilityMessage("Available. Please complete guest details.", false);
+          }
           openGuestModal();
           return;
         }
 
         var roomsLeft = response && typeof response.rooms_left === "number" ? response.rooms_left : 0;
-        setAvailabilityMessage("Not available for selected dates. Rooms left: " + roomsLeft, true);
+        if (pendingSearchPayload.isVillaBooking) {
+          if (roomsLeft < ROOM_LIMIT) {
+            setAvailabilityMessage("Family Villa is not available for selected dates. One or more rooms are already booked.", true);
+          } else {
+            setAvailabilityMessage("Family Villa is not available for selected dates.", true);
+          }
+        } else {
+          setAvailabilityMessage("Not available for selected dates. Rooms left: " + roomsLeft, true);
+        }
       })
       .catch(function (error) {
         if (isUnauthorizedError(error)) {
           setAvailabilityMessage("Supabase permission error for availability check. See setup steps.", true);
         } else {
-          setAvailabilityMessage("Could not check availability. Please retry.", true);
+          var rpcMessage = error && error.message ? "Could not check availability: " + error.message : "Could not check availability. Please retry.";
+          setAvailabilityMessage(rpcMessage, true);
         }
         console.error("Availability RPC error:", error);
       })
@@ -220,7 +248,7 @@ $(function () {
       contactNumber: $('input[name="contactNumber"]').val(),
     };
 
-    var requestedRooms = parseInt(pendingSearchPayload.rooms, 10);
+    var requestedRooms = getRequestedRooms(pendingSearchPayload.rooms);
     if (Number.isNaN(requestedRooms) || requestedRooms < 1) {
       requestedRooms = 1;
     }
@@ -252,7 +280,14 @@ $(function () {
         console.log("Booking RPC response:", response);
 
         if (response && response.success) {
-          setAvailabilityMessage("Booking submitted successfully. Booking ID: " + response.booking_id, false);
+          if (pendingSearchPayload.isVillaBooking) {
+            setAvailabilityMessage(
+              "Family Villa booked at INR " + VILLA_RATE + "/night. Booking ID: " + response.booking_id,
+              false
+            );
+          } else {
+            setAvailabilityMessage("Booking submitted successfully. Booking ID: " + response.booking_id, false);
+          }
           closeGuestModal();
           return;
         }
@@ -337,4 +372,62 @@ $(function () {
       $checkOutInput.val("");
     }
   });
+
+  var $villaTrack = $(".villa-track");
+  var $villaSlides = $(".villa-slide");
+  var $villaDots = $(".villa-dot");
+  var villaSlideCount = $villaSlides.length;
+  var currentVillaSlide = 0;
+  var villaAutoTimer = null;
+
+  function renderVillaSlide(index) {
+    if (!$villaTrack.length || !villaSlideCount) {
+      return;
+    }
+    currentVillaSlide = (index + villaSlideCount) % villaSlideCount;
+    $villaTrack.css("transform", "translateX(-" + currentVillaSlide * 100 + "%)");
+    $villaDots.removeClass("is-active");
+    $villaDots.eq(currentVillaSlide).addClass("is-active");
+  }
+
+  function startVillaAutoPlay() {
+    if (!villaSlideCount) {
+      return;
+    }
+    clearInterval(villaAutoTimer);
+    villaAutoTimer = setInterval(function () {
+      renderVillaSlide(currentVillaSlide + 1);
+    }, 4500);
+  }
+
+  if ($villaTrack.length && villaSlideCount) {
+    $(".villa-carousel-btn.prev").on("click", function () {
+      renderVillaSlide(currentVillaSlide - 1);
+      startVillaAutoPlay();
+    });
+
+    $(".villa-carousel-btn.next").on("click", function () {
+      renderVillaSlide(currentVillaSlide + 1);
+      startVillaAutoPlay();
+    });
+
+    $villaDots.on("click", function () {
+      var slide = parseInt($(this).attr("data-slide"), 10);
+      if (!Number.isNaN(slide)) {
+        renderVillaSlide(slide);
+        startVillaAutoPlay();
+      }
+    });
+
+    $(".villa-carousel").on("mouseenter", function () {
+      clearInterval(villaAutoTimer);
+    });
+
+    $(".villa-carousel").on("mouseleave", function () {
+      startVillaAutoPlay();
+    });
+
+    renderVillaSlide(0);
+    startVillaAutoPlay();
+  }
 });
