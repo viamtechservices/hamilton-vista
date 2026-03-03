@@ -404,13 +404,6 @@
             Contact Number
             <input type="tel" name="contactNumber" placeholder="+91 98162 17173" required />
           </label>
-          <div
-            id="turnstile-container"
-            class="cf-turnstile"
-            data-sitekey="REPLACE_WITH_TURNSTILE_SITE_KEY"
-            data-callback="hvTurnstileSuccess"
-            data-expired-callback="hvTurnstileExpired"
-          ></div>
           <div class="modal-actions">
             <button type="button" id="cancel-guest-form" class="ghost-btn">Cancel</button>
             <button type="submit">Confirm Booking</button>
@@ -426,11 +419,9 @@
     <script>
       window.SUPABASE_URL = "https://rlpcsrmgaeiwcmdkhhvi.supabase.co";
       window.SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJscGNzcm1nYWVpd2NtZGtoaHZpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzExMzUxNTUsImV4cCI6MjA4NjcxMTE1NX0.KNQQpdKyBff3v_3vBKDAcU5LhYPA4zzgWqXpyFw-wgo";
-      window.TURNSTILE_SITE_KEY = "REPLACE_WITH_TURNSTILE_SITE_KEY";
     </script>
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
     <script src="script.js"></script>
   </body>
 </html>

@@ -4,10 +4,7 @@ $(function () {
   var VILLA_RATE = 9900;
   var supabaseUrl = window.SUPABASE_URL;
   var supabaseAnonKey = window.SUPABASE_ANON_KEY;
-  var turnstileSiteKey = window.TURNSTILE_SITE_KEY;
   var supabase = null;
-  var captchaToken = "";
-  var turnstileWidgetId = null;
 
   if (
     window.supabase &&
@@ -101,43 +98,6 @@ $(function () {
     $("#guest-modal").removeClass("is-open").attr("aria-hidden", "true");
     $("#guest-details-form")[0].reset();
     $('input[name="roomsRequired"]').val(String(ROOM_LIMIT));
-    captchaToken = "";
-    if (window.turnstile && turnstileWidgetId !== null) {
-      window.turnstile.reset(turnstileWidgetId);
-    }
-  }
-
-  window.hvTurnstileSuccess = function (token) {
-    captchaToken = token || "";
-  };
-
-  window.hvTurnstileExpired = function () {
-    captchaToken = "";
-  };
-
-  function initTurnstile() {
-    if (
-      !window.turnstile ||
-      typeof turnstileSiteKey !== "string" ||
-      turnstileSiteKey.indexOf("REPLACE_WITH_") === 0
-    ) {
-      return;
-    }
-
-    var $container = $("#turnstile-container");
-    if (!$container.length) {
-      return;
-    }
-
-    $container.attr("data-sitekey", turnstileSiteKey);
-
-    if (turnstileWidgetId === null) {
-      turnstileWidgetId = window.turnstile.render("#turnstile-container", {
-        sitekey: turnstileSiteKey,
-        callback: window.hvTurnstileSuccess,
-        "expired-callback": window.hvTurnstileExpired,
-      });
-    }
   }
 
   $("#booking-form").on("submit", function (event) {
@@ -237,11 +197,6 @@ $(function () {
       closeGuestModal();
       return;
     }
-    if (!captchaToken) {
-      setAvailabilityMessage("Please complete CAPTCHA before confirming booking.", true);
-      return;
-    }
-
     var guestPayload = {
       guestName: $('input[name="guestName"]').val(),
       roomsRequired: pendingSearchPayload.rooms,
@@ -340,15 +295,6 @@ $(function () {
       $("#gallery-close").trigger("click");
     }
   });
-
-  var turnstileWaitAttempts = 0;
-  var turnstileWaitTimer = setInterval(function () {
-    turnstileWaitAttempts += 1;
-    initTurnstile();
-    if (turnstileWidgetId !== null || turnstileWaitAttempts >= 20) {
-      clearInterval(turnstileWaitTimer);
-    }
-  }, 300);
 
   var today = new Date();
   var yyyy = today.getFullYear();
